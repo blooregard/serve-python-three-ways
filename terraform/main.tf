@@ -47,3 +47,39 @@ resource "azurerm_container_registry" "acr" {
   sku                 = "Basic"
   admin_enabled       = false
 }
+
+resource "azurerm_service_plan" "serve_python_three_ways" {
+  name                = "serve-python-three-ways"
+  location            = azurerm_resource_group.demo_rg.location
+  resource_group_name = azurerm_resource_group.demo_rg.name
+  sku_name            = "B1"
+  os_type             = "Linux"
+}
+
+resource "azurerm_linux_web_app" "service_app" {
+  name                = "serve-python-docker-service"
+  location            = azurerm_resource_group.demo_rg.location
+  resource_group_name = azurerm_resource_group.demo_rg.name
+  service_plan_id = azurerm_service_plan.serve_python_three_ways.id
+
+  site_config {}
+}
+
+resource "azurerm_storage_account" "function_storage" {
+  name                     = "servepython3ways"
+  resource_group_name      = azurerm_resource_group.demo_rg.name
+  location                 = azurerm_resource_group.demo_rg.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
+resource "azurerm_linux_function_app" "function_app" {
+  name                       = "serve-python-docker-function"
+  location                   = azurerm_resource_group.demo_rg.location
+  resource_group_name        = azurerm_resource_group.demo_rg.name
+  service_plan_id        = azurerm_service_plan.serve_python_three_ways.id
+  storage_account_name       = azurerm_storage_account.function_storage.name
+  storage_account_access_key = azurerm_storage_account.function_storage.primary_access_key
+
+  site_config {}
+}

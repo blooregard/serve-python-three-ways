@@ -1,6 +1,11 @@
 # serve-python-three-ways
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 
-docker build -f Dockerfile.aks .
+docker build -t serve_python_3_ways -f Dockerfile.aks . 
+docker run -d -p 80:80 --name serve_python_3_ways serve_python_3_ways
+curl http://localhost/lotto
 
 az login
 
