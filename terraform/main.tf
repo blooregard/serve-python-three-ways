@@ -41,7 +41,7 @@ resource "azurerm_kubernetes_cluster" "demo_aks" {
 }
 
 resource "azurerm_container_registry" "acr" {
-  name                = "ServePythonThreeWays"
+  name                = "servepythonthreeways"
   resource_group_name = azurerm_resource_group.demo_rg.name
   location            = azurerm_resource_group.demo_rg.location
   sku                 = "Basic"
