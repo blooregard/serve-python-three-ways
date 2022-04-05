@@ -1,0 +1,10 @@
+# Default values for serve-python-aks-chart.
+
+replicaCount: 4
+
+image:
+  repository: servepythonthreeways.azurecr.io/serve-python-three-ways:v1
+  pullPolicy: Always
+
+application:
+  name: serve-python-aks
