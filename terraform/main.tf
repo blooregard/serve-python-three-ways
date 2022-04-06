@@ -60,9 +60,19 @@ resource "azurerm_linux_web_app" "service_app" {
   name                = "serve-python-docker-service"
   location            = azurerm_resource_group.demo_rg.location
   resource_group_name = azurerm_resource_group.demo_rg.name
-  service_plan_id = azurerm_service_plan.serve_python_three_ways.id
+  service_plan_id     = azurerm_service_plan.serve_python_three_ways.id
+  
+  site_config {
+    application_stack {
+      docker_image = "servepythonthreeways.azurecr.io/serve-python-three-ways"
+      docker_image_tag = "v1"
+      python_version = "3.8"
+    }
 
-  site_config {}
+    worker_count = 1
+    always_on = true
+    http2_enabled = false
+  }
 }
 
 resource "azurerm_storage_account" "function_storage" {
@@ -77,9 +87,21 @@ resource "azurerm_linux_function_app" "function_app" {
   name                       = "serve-python-docker-function"
   location                   = azurerm_resource_group.demo_rg.location
   resource_group_name        = azurerm_resource_group.demo_rg.name
-  service_plan_id        = azurerm_service_plan.serve_python_three_ways.id
+  service_plan_id            = azurerm_service_plan.serve_python_three_ways.id
   storage_account_name       = azurerm_storage_account.function_storage.name
   storage_account_access_key = azurerm_storage_account.function_storage.primary_access_key
 
-  site_config {}
+  site_config {
+    application_stack {
+      docker {
+        registry_url = "servepythonthreeways.azurecr.io"
+        image_name   = "serve-python-three-ways"
+        image_tag    = "v1"
+      }
+    }
+
+    worker_count = 1
+    always_on = false
+    http2_enabled = false
+  }
 }

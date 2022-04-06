@@ -42,3 +42,6 @@ kubectl get pods
 
 curl -X POST -v http://52.149.238.52/lotto
 
+## Turn on the ACR Admin Acount for App Services and Functions
+az acr update -n servepythonthreeways --admin-enabled true
+
